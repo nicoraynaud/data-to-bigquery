@@ -1,5 +1,6 @@
 package com.tekinico.datatobigquery.service;
 
+import com.tekinico.datatobigquery.connector.BigQueryConnector;
 import com.tekinico.datatobigquery.util.CsvResultSetExtractor;
 import org.springframework.data.util.Pair;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,8 +16,11 @@ public class DataExtractorService {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public DataExtractorService(JdbcTemplate jdbcTemplate) {
+    private final BigQueryConnector bigQueryConnector;
+
+    public DataExtractorService(JdbcTemplate jdbcTemplate, BigQueryConnector bigQueryConnector) {
         this.jdbcTemplate = jdbcTemplate;
+        this.bigQueryConnector = bigQueryConnector;
     }
 
     public File queryToCSV(String sqlQuery, List<Pair<String, String>> schema) throws IOException {
@@ -26,5 +30,13 @@ public class DataExtractorService {
         jdbcTemplate.query(sqlQuery, new CsvResultSetExtractor(csvFile, schema));
 
         return csvFile;
+    }
+
+    public void queryToBigQuery(String sqlQuery, List<Pair<String, String>> schema) throws IOException {
+
+        File csvFile = this.queryToCSV(sqlQuery, schema);
+
+        bigQueryConnector.uploadToBigQuery(csvFile, "my_table", true, schema);
+
     }
 }

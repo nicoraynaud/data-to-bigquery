@@ -31,7 +31,7 @@ public class DataToBigqueryApplication implements InitializingBean {
 		String sqlQuery = "SELECT s.id as subscriptionId, s.dateBought, d.OS as deviceOS \n" +
 						  "FROM subscription s INNER JOIN device d ON d.user_id = s.user_id";
 
-		File csvFile = dataExtractorService.queryToCSV(sqlQuery, schema);
+		dataExtractorService.queryToBigQuery(sqlQuery, schema);
 	}
 
 }
