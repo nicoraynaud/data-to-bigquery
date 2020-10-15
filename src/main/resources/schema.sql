@@ -1,0 +1,30 @@
+
+DROP TABLE IF EXISTS user;
+
+CREATE TABLE user (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  first_name VARCHAR(250) NOT NULL,
+  last_name VARCHAR(250) NOT NULL,
+  email VARCHAR(250) NOT NULL
+);
+
+DROP TABLE IF EXISTS device;
+
+CREATE TABLE device (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  OS VARCHAR(50) NOT NULL,
+  name VARCHAR(250) NOT NULL,
+  user_id INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
+DROP TABLE IF EXISTS subscription;
+
+CREATE TABLE subscription (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  type VARCHAR(50) NOT NULL,
+  date_bought DATE NOT NULL,
+  date_cancelled DATE,
+  user_id INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES user(id)
+);
